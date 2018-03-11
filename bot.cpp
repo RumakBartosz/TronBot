@@ -14,7 +14,9 @@ vector<vector<int>> initArrayFromNotation(string notation)
 
     for(int i = 0; i < notation.length(); i++)
     {
-        if(isdigit(notation[i]))
+        if(isdigit(notation[i]) && isdigit(notation[i+1]))
+            height += (notation[i] - '0') * 10;
+        else if(isdigit(notation[i]) && !isdigit(notation[i+1]))
             height += notation[i] - '0';
         if(isalpha(notation[i]))
             height++;
@@ -65,7 +67,12 @@ vector<vector<int>> notationToRepresentation(string notation)
         for(int w = 0; w < width; w++)
         {
                 
-            if(isdigit(notation[counter]))
+            if(isdigit(notation[counter]) && isdigit(notation[counter+1]))
+            {
+                w += ((((int)notation[counter] - '0') * 10) + ((int)notation[counter] - '0') - 1);
+                counter++;
+            }
+            else if(isdigit(notation[counter]) && !isdigit(notation[counter+1]))
             {
                 w += ((int)notation[counter] - '0') - 1;
                 counter++;
@@ -177,48 +184,18 @@ vector<int> availablePositionCollection(vector<vector<int>> representation, play
 
 int chooseMoveFromCollection(vector<int> moveCollection)
 {
-    int randomMove = rand() % moveCollection.size();
+    int randomMove = 0;
+    randomMove = rand() % moveCollection.size();
 
-    return moveCollection[randomMove];
+    if(randomMove != 0)
+        return moveCollection[randomMove];
+
+    else
+        return 0;
 }
 
 int chooseMove(vector<vector<int>> representation, player presentTurn)
 {
-    int height = representation.size();
-    int width = representation[0].size();
-    int presentPositionHeight = 0;
-    int presentPositionWidth = 0;
-    int moveCounter = 0;
-    
-
-    for(int i = 0; i < height; i++)
-    {
-        for(int j = 0; j < width; j++)
-        {
-            if(representation[i][j] == presentTurn)
-            {
-                representation[i][j] == 3;
-                int presentPositionHeight = i;
-                int presentPositionWidth = j;
-                break;
-            }
-        }
-    }
-
-    if((presentPositionHeight < height) && (representation[presentPositionHeight+1][presentPositionWidth] == 1))
-        moveCounter++;
-
-    if((presentPositionHeight > 0) && (representation[presentPositionHeight-1][presentPositionWidth] == 1))
-        moveCounter++;
-
-    if((presentPositionWidth < width) && (representation[presentPositionHeight][presentPositionWidth+1] == 1))
-        moveCounter++;
-
-    if((presentPositionWidth > 0) && (representation[presentPositionHeight][presentPositionWidth-1] == 1))
-        moveCounter++;
-
-    int randValue = rand() % moveCounter + 1;
-
     vector<int> usableCollection = availablePositionCollection(representation, RED);
     int choosenMove = chooseMoveFromCollection(usableCollection);
     //if 0 return err
@@ -234,6 +211,10 @@ int main()
     {
         string incomingState;
         cin >> incomingState;
+
+        if(incomingState == "exit")
+            break;
+
         vector<vector<int>> stateAfterMove = 
             notationToRepresentation(incomingState);
         cout << chooseMove(stateAfterMove,RED);
