@@ -30,10 +30,6 @@ vector<vector<int>> initArrayFromNotation(string notation)
             width++;
     }
 
-    cout << height;
-    cout << width;
-    cout << endl;
-
     for(int w = 0; w < width; w++)
     {
         array.push_back(vector<int>());
@@ -42,13 +38,7 @@ vector<vector<int>> initArrayFromNotation(string notation)
             array[w].push_back(1);
         }
     }
-
-    cout << height;
-    cout << array.size();
-    cout << width;
-    cout << array[0].size();
-    cout << endl;
-    
+       
     return array;
 }
 
@@ -117,16 +107,16 @@ vector<vector<int>> notationToRepresentation(string notation)
     }
     
 
-    for(int wi = 0; wi < height; wi++)        
-    {                                         
-        for(int he = 0; he < width; he++)            
-        { 
-            cout << representation[wi][he]; 
-        } 
-        cout << endl;
-    }
+    //for(int wi = 0; wi < height; wi++)        
+    //{                                         
+    //    for(int he = 0; he < width; he++)            
+    //    { 
+    //        cout << representation[wi][he]; 
+    //    } 
+    //    cout << endl;
+    //}
 
-    cout << endl;
+    //cout << endl;
 
     return representation;
 }
@@ -178,30 +168,42 @@ vector<int> availablePositionCollection(vector<vector<int>> representation, play
         }
     }
 
-    for(int length = 0; length < moveCollection.size(); length++)
-    {
-        cout << moveCollection[length];
-    }
-    cout << endl;
+    //for(int length = 0; length < moveCollection.size(); length++)
+    //{
+    //    cout << moveCollection[length];
+    //}
+    //cout << endl;
 
     return moveCollection;
 }
 
-int chooseMoveFromCollection(vector<int> moveCollection)
+string chooseMoveFromCollection(vector<int> moveCollection)
 {
     if(moveCollection.size() == 0)
-        return 1;
+        return "up";
 
     int randomMove = 0;
     randomMove = rand() % moveCollection.size();
  
-    return moveCollection[randomMove];
+    if(moveCollection[randomMove] == 1)
+        return "up";
+
+    if(moveCollection[randomMove] == 2)
+        return "down";
+
+    if(moveCollection[randomMove] == 3)
+        return "left";
+
+    if(moveCollection[randomMove] == 4)
+        return "right";
+
+    return "up";
 }
 
-int chooseMove(vector<vector<int>> representation, player presentTurn)
+string chooseMove(vector<vector<int>> representation, player presentTurn)
 {
-    vector<int> usableCollection = availablePositionCollection(representation, RED);
-    int choosenMove = chooseMoveFromCollection(usableCollection);
+    vector<int> usableCollection = availablePositionCollection(representation, presentTurn);
+    string choosenMove = chooseMoveFromCollection(usableCollection);
     //if 0 return err
     //if > 0 rand move, save representation, parse to string;
 
@@ -257,8 +259,8 @@ int main()
             for(int i = 5; i < incomingState.length(); i++)
                 move += incomingState[i];
         }
-        cout << presentColor << endl;
-        cout << move << endl;
+       // cout << presentColor << endl;
+       // cout << move << endl;
         
         vector<vector<int>> stateAfterMove = 
             notationToRepresentation(move);
