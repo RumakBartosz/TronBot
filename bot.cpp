@@ -97,6 +97,11 @@ vector<vector<int>> notationToRepresentation(string notation)
                 representation[h][w] = 5;
                 counter++;
             }
+            else if(notation[counter] == 'o')
+            {
+                representation[h][w] = 0;
+                counter++;
+            }
             else if(notation[counter] == '/')
             {
                 w -= 1;
@@ -184,14 +189,13 @@ vector<int> availablePositionCollection(vector<vector<int>> representation, play
 
 int chooseMoveFromCollection(vector<int> moveCollection)
 {
+    if(moveCollection.size() == 0)
+        return 1;
+
     int randomMove = 0;
     randomMove = rand() % moveCollection.size();
-
-    if(randomMove != 0)
-        return moveCollection[randomMove];
-
-    else
-        return 0;
+ 
+    return moveCollection[randomMove];
 }
 
 int chooseMove(vector<vector<int>> representation, player presentTurn)
@@ -206,18 +210,59 @@ int chooseMove(vector<vector<int>> representation, player presentTurn)
 
 int main()
 {
+    player presentColor;
+    string move = "";
+
     srand (time(NULL));
     for(;;)
     {
         string incomingState;
-        cin >> incomingState;
+        getline(cin, incomingState);
 
         if(incomingState == "exit")
-            break;
+            return 0;
 
+        if(incomingState == "tbi")
+            cout << "tbi ok";
+
+        if(incomingState == "tbi v1")
+            cout << "tbi v1 ok";
+
+        if(incomingState == "color red")
+        {
+            presentColor = RED;
+            cout << "color ok";
+            break;
+        }
+
+        if(incomingState == "color blue")
+        {
+            presentColor = BLUE;
+            cout << "color ok";
+            break;
+        }
+
+    }
+
+    for(;;)
+    {
+        string incomingState;
+        getline(cin, incomingState);
+
+        if(incomingState == "exit")
+            return 0;
+        
+        if((((incomingState[0] == 'm') && (incomingState[1] == 'o')) && (incomingState[2] == 'v')) && (incomingState[3] == 'e'))
+        {
+            for(int i = 5; i < incomingState.length(); i++)
+                move += incomingState[i];
+        }
+        cout << presentColor << endl;
+        cout << move << endl;
+        
         vector<vector<int>> stateAfterMove = 
-            notationToRepresentation(incomingState);
-        cout << chooseMove(stateAfterMove,RED);
+            notationToRepresentation(move);
+        cout << chooseMove(stateAfterMove, presentColor);
     }
 
     return 0;
